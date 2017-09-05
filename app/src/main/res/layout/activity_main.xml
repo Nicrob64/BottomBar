@@ -43,4 +43,16 @@
         android:layout_height="wrap_content"
         android:text="Using Badges" />
 
+    <Button
+        android:id="@+id/buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Using Button" />
+
+    <Button
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Using empty" />
+
 </LinearLayout>

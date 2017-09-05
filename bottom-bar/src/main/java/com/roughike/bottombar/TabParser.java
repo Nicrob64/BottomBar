@@ -20,8 +20,10 @@ class TabParser {
     private final BottomBarTab.Config defaultTabConfig;
     private final XmlResourceParser parser;
 
-    private ArrayList<BottomBarTab> tabs;
+    private ArrayList<BottomBarComponent> tabs;
     private BottomBarTab workingTab;
+	private BottomBarButton workingButton;
+	private BottomBarEmptyView workingEmpty;
 
     TabParser(Context context, BottomBarTab.Config defaultTabConfig, @XmlRes int tabsXmlResId) {
         this.context = context;
@@ -40,6 +42,17 @@ class TabParser {
 
             while (eventType != XmlResourceParser.END_DOCUMENT) {
                 if(eventType == XmlResourceParser.START_TAG) {
+					switch (parser.getName()){
+						case "tab":
+							parseNewTab(parser);
+							break;
+						case "button":
+							parseNewButton(parser);
+							break;
+						case "empty":
+							parseNewEmpty(parser);
+							break;
+					}
                     parseNewTab(parser);
                 } else if(eventType == XmlResourceParser.END_TAG) {
                     if (parser.getName().equals("tab")) {
@@ -48,6 +61,18 @@ class TabParser {
                             workingTab = null;
                         }
                     }
+					if(parser.getName().equals("button")){
+						if(workingButton != null){
+							tabs.add(workingButton);
+							workingButton = null;
+						}
+					}
+					if(parser.getName().equals("empty")){
+						if(workingEmpty != null){
+							tabs.add(workingEmpty);
+							workingEmpty = null;
+						}
+					}
                 }
 
                 eventType = parser.next();
@@ -57,6 +82,74 @@ class TabParser {
             throw new TabParserException();
         }
     }
+
+	private void parseNewEmpty(XmlResourceParser parser){
+		if(workingEmpty == null){
+			workingEmpty = new BottomBarEmptyView(context);
+		}
+		workingEmpty.setIndexInContainer(tabs.size());
+		for (int i = 0; i < parser.getAttributeCount(); i++) {
+			String attrName = parser.getAttributeName(i);
+
+			switch (attrName) {
+				case "id":
+					workingEmpty.setId(parser.getIdAttributeResourceValue(i));
+					break;
+			}
+		}
+	}
+
+	private void parseNewButton(XmlResourceParser parser) {
+		if (workingButton == null) {
+			workingButton = new BottomBarButton(context);
+		}
+
+		workingButton.setIndexInContainer(tabs.size());
+
+		for (int i = 0; i < parser.getAttributeCount(); i++) {
+			String attrName = parser.getAttributeName(i);
+
+			switch (attrName) {
+				case "id":
+					workingButton.setId(parser.getIdAttributeResourceValue(i));
+					break;
+				case "icon":
+					workingButton.setIconResId(parser.getAttributeResourceValue(i, 0));
+					break;
+				case "title":
+					workingButton.setTitle(getTitleValue(i, parser));
+					break;
+				case "iconColor":
+					Integer inActiveColor = getColorValue(i, parser);
+					if (inActiveColor != null) {
+						workingButton.setIconColor(inActiveColor);
+					}
+					break;
+				case "backgroundColor":
+					Integer bg = getColorValue(i, parser);
+
+					if (bg != null) {
+						workingButton.setBackgroundColor(bg);
+					}
+					break;
+				case "cornerRadius":
+					Integer cornerRadius = parser.getAttributeIntValue(i, 5);
+
+					if (cornerRadius != null) {
+						workingButton.setCornerRadius(cornerRadius);
+					}
+					break;
+				case "badgeBackgroundColor":
+					Integer badgeBackgroundColor = getColorValue(i, parser);
+
+					if (badgeBackgroundColor != null) {
+						workingButton.setBadgeBackgroundColor(badgeBackgroundColor);
+					}
+					break;
+			}
+		}
+	}
+
 
     private void parseNewTab(XmlResourceParser parser) {
         if (workingTab == null) {
@@ -113,7 +206,6 @@ class TabParser {
     private BottomBarTab tabWithDefaults() {
         BottomBarTab tab = new BottomBarTab(context);
         tab.setConfig(defaultTabConfig);
-
         return tab;
     }
 
@@ -141,7 +233,7 @@ class TabParser {
         }
     }
 
-    List<BottomBarTab> getTabs() {
+    List<BottomBarComponent> getTabs() {
         return tabs;
     }
 

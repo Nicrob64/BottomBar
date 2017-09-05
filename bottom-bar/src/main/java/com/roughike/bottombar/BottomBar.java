@@ -92,6 +92,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
 
     private OnTabSelectListener onTabSelectListener;
     private OnTabReselectListener onTabReselectListener;
+	private OnButtonClickListener onButtonClickListener;
 
     private boolean isComingFromRestoredState;
     private boolean ignoreTabReselectionListener;
@@ -252,13 +253,13 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
                 .build();
     }
 
-    private void updateItems(final List<BottomBarTab> bottomBarItems) {
+    private void updateItems(final List<BottomBarComponent> bottomBarItems) {
         int index = 0;
         int biggestWidth = 0;
 
-        BottomBarTab[] viewsToAdd = new BottomBarTab[bottomBarItems.size()];
+        BottomBarComponent[] viewsToAdd = new BottomBarComponent[bottomBarItems.size()];
 
-        for (BottomBarTab bottomBarTab : bottomBarItems) {
+        for (BottomBarComponent bottomBarComponent : bottomBarItems) {
             BottomBarTab.Type type;
 
             if (isShiftingMode()) {
@@ -269,29 +270,30 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
                 type = BottomBarTab.Type.FIXED;
             }
 
-            bottomBarTab.setType(type);
-            bottomBarTab.prepareLayout();
+            bottomBarComponent.setType(type);
+			bottomBarComponent.prepareLayout();
 
-            if (index == currentTabPosition) {
-                bottomBarTab.select(false);
-
-                handleBackgroundColorChange(bottomBarTab, false);
-            } else {
-                bottomBarTab.deselect(false);
-            }
+			if(bottomBarComponent instanceof BottomBarTab) {
+				if (index == currentTabPosition) {
+					((BottomBarTab) bottomBarComponent).select(false);
+					handleBackgroundColorChange(((BottomBarTab) bottomBarComponent), false);
+				} else {
+					((BottomBarTab) bottomBarComponent).deselect(false);
+				}
+			}
 
             if (!isTabletMode) {
-                if (bottomBarTab.getWidth() > biggestWidth) {
-                    biggestWidth = bottomBarTab.getWidth();
+                if (bottomBarComponent.getWidth() > biggestWidth) {
+                    biggestWidth = bottomBarComponent.getWidth();
                 }
 
-                viewsToAdd[index] = bottomBarTab;
+                viewsToAdd[index] = bottomBarComponent;
             } else {
-                tabContainer.addView(bottomBarTab);
+                tabContainer.addView(bottomBarComponent);
             }
 
-            bottomBarTab.setOnClickListener(this);
-            bottomBarTab.setOnLongClickListener(this);
+			bottomBarComponent.setOnClickListener(this);
+			bottomBarComponent.setOnLongClickListener(this);
             index++;
         }
 
@@ -300,7 +302,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
         }
     }
 
-    private void resizeTabsToCorrectSizes(List<BottomBarTab> bottomBarItems, BottomBarTab[] viewsToAdd) {
+    private void resizeTabsToCorrectSizes(List<BottomBarComponent> bottomBarItems, BottomBarComponent[] viewsToAdd) {
         int proposedItemWidth = Math.min(
                 MiscUtils.dpToPixel(getContext(), screenWidth / bottomBarItems.size()),
                 maxFixedItemWidth
@@ -308,13 +310,14 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
 
         inActiveShiftingItemWidth = (int) (proposedItemWidth * 0.9);
         activeShiftingItemWidth = (int) (proposedItemWidth + (proposedItemWidth * (bottomBarItems.size() * 0.1)));
+
         int height = Math.round(getContext().getResources().getDimension(R.dimen.bb_height));
 
-        for (BottomBarTab bottomBarView : viewsToAdd) {
+        for (BottomBarComponent bottomBarView : viewsToAdd) {
             LayoutParams params;
 
-            if (isShiftingMode()) {
-                if (bottomBarView.isActive()) {
+            if (isShiftingMode() && bottomBarView instanceof BottomBarTab) {
+                if (((BottomBarTab) bottomBarView).isActive()) {
                     params = new LayoutParams(activeShiftingItemWidth, height);
                 } else {
                     params = new LayoutParams(inActiveShiftingItemWidth, height);
@@ -675,15 +678,24 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
 
     private void handleClick(View v) {
         BottomBarTab oldTab = getCurrentTab();
-        BottomBarTab newTab = (BottomBarTab) v;
+		BottomBarComponent newTab = (BottomBarComponent) v;
 
-        oldTab.deselect(true);
-        newTab.select(true);
-
-        shiftingMagic(oldTab, newTab, true);
-        handleBackgroundColorChange(newTab, true);
-        updateSelectedTab(newTab.getIndexInTabContainer());
+		if(newTab instanceof BottomBarTab) {
+			oldTab.deselect(true);
+			((BottomBarTab) newTab).select(true);
+			shiftingMagic(oldTab, ((BottomBarTab) newTab), true);
+			handleBackgroundColorChange(((BottomBarTab) newTab), true);
+			updateSelectedTab(newTab.getIndexInTabContainer());
+		}else{
+			handleNonNavigationClick(v);
+		}
     }
+
+	private void handleNonNavigationClick(View v){
+		if(onButtonClickListener != null){
+			onButtonClickListener.onButtonClicked(v.getId());
+		}
+	}
 
     private boolean handleLongClick(View v) {
         if (v instanceof BottomBarTab) {
@@ -695,7 +707,12 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
         }
 
         return true;
-    }
+	}
+
+
+	public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
+		this.onButtonClickListener = onButtonClickListener;
+	}
 
     private void selectTabAtPosition(int position, boolean animate) {
         BottomBarTab oldTab = getCurrentTab();

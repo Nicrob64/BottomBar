@@ -5,12 +5,14 @@
         android:id="@+id/bb_bottom_bar_shadow"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:src="@drawable/bb_bottom_bar_top_shadow"/>
+        android:src="@drawable/bb_bottom_bar_top_shadow"
+        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/bb_bottom_bar_outer_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
 
         <View
             android:id="@+id/bb_bottom_bar_background_overlay"
@@ -23,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:background="@android:color/transparent"
             android:orientation="horizontal" />
 
     </FrameLayout>

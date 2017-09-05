@@ -95,7 +95,7 @@ class BottomBarBadge extends TextView {
         return isVisible;
     }
 
-    void attachToTab(BottomBarTab tab, int backgroundColor) {
+    void attachToTab(BottomBarComponent tab, int backgroundColor) {
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -114,7 +114,7 @@ class BottomBarBadge extends TextView {
         setBackgroundCompat(backgroundCircle);
     }
 
-    private void wrapTabAndBadgeInSameContainer(final BottomBarTab tab) {
+    private void wrapTabAndBadgeInSameContainer(final BottomBarComponent tab) {
         ViewGroup tabContainer = (ViewGroup) tab.getParent();
         tabContainer.removeView(tab);
 
@@ -137,7 +137,7 @@ class BottomBarBadge extends TextView {
         });
     }
 
-    void removeFromTab(BottomBarTab tab) {
+    void removeFromTab(BottomBarComponent tab) {
         FrameLayout badgeAndTabContainer = (FrameLayout) getParent();
         ViewGroup originalTabContainer = (ViewGroup) badgeAndTabContainer.getParent();
 
@@ -146,7 +146,7 @@ class BottomBarBadge extends TextView {
         originalTabContainer.addView(tab, tab.getIndexInTabContainer());
     }
 
-    void adjustPositionAndSize(BottomBarTab tab) {
+    void adjustPositionAndSize(BottomBarComponent tab) {
         AppCompatImageView iconView = tab.getIconView();
         ViewGroup.LayoutParams params = getLayoutParams();
 

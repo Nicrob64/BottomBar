@@ -35,7 +35,7 @@ import android.widget.TextView;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class BottomBarTab extends LinearLayout {
+public class BottomBarTab extends BottomBarComponent {
     private static final long ANIMATION_DURATION = 150;
     private static final float ACTIVE_TITLE_SCALE = 1;
     private static final float INACTIVE_FIXED_TITLE_SCALE = 0.86f;
@@ -44,31 +44,26 @@ public class BottomBarTab extends LinearLayout {
     private final int eightDps;
     private final int sixteenDps;
 
-    private Type type = Type.FIXED;
-    private int iconResId;
-    private String title;
+
 
     private float inActiveAlpha;
     private float activeAlpha;
     private int inActiveColor;
     private int activeColor;
     private int barColorWhenSelected;
-    private int badgeBackgroundColor;
 
-    private AppCompatImageView iconView;
-    private TextView titleView;
+
     private boolean isActive;
 
-    private int indexInContainer;
+	private boolean navigationItem = true;
+
 
     @VisibleForTesting
     BottomBarBadge badge;
     private int titleTextAppearanceResId;
     private Typeface titleTypeFace;
 
-    enum Type {
-        FIXED, SHIFTING, TABLET
-    }
+
 
     BottomBarTab(Context context) {
         super(context);
@@ -89,7 +84,8 @@ public class BottomBarTab extends LinearLayout {
         setTitleTypeface(config.titleTypeFace);
     }
 
-    void prepareLayout() {
+	@Override
+    protected void prepareLayout() {
         int layoutResource;
 
         layoutResource = getLayoutResource();
@@ -152,40 +148,17 @@ public class BottomBarTab extends LinearLayout {
         }
     }
 
-    Type getType() {
-        return type;
-    }
+	public boolean isNavigationItem(){
+		return navigationItem;
+	}
 
-    void setType(Type type) {
-        this.type = type;
-    }
+	public void setNavigationItem(boolean nav){
+		this.navigationItem = nav;
+	}
+
 
     public ViewGroup getOuterView() {
         return (ViewGroup) getParent();
-    }
-
-    AppCompatImageView getIconView() {
-        return iconView;
-    }
-
-    int getIconResId() {
-        return iconResId;
-    }
-
-    void setIconResId(int iconResId) {
-        this.iconResId = iconResId;
-    }
-
-    String getTitle() {
-        return title;
-    }
-
-    TextView getTitleView() {
-        return titleView;
-    }
-
-    void setTitle(String title) {
-        this.title = title;
     }
 
     float getInActiveAlpha() {
@@ -244,17 +217,7 @@ public class BottomBarTab extends LinearLayout {
         this.barColorWhenSelected = barColorWhenSelected;
     }
 
-    int getBadgeBackgroundColor() {
-        return badgeBackgroundColor;
-    }
 
-    void setBadgeBackgroundColor(int badgeBackgroundColor) {
-        this.badgeBackgroundColor = badgeBackgroundColor;
-
-        if (badge != null) {
-            badge.setColoredCircleBackground(badgeBackgroundColor);
-        }
-    }
 
     int getCurrentDisplayedIconColor() {
         Object tag = iconView.getTag();
@@ -284,27 +247,7 @@ public class BottomBarTab extends LinearLayout {
         return 0;
     }
 
-    public void setBadgeCount(int count) {
-        if (count <= 0) {
-            if (badge != null) {
-                badge.removeFromTab(this);
-                badge = null;
-            }
 
-            return;
-        }
-
-        if (badge == null) {
-            badge = new BottomBarBadge(getContext());
-            badge.attachToTab(this, badgeBackgroundColor);
-        }
-
-        badge.setCount(count);
-    }
-
-    public void removeBadge() {
-        setBadgeCount(0);
-    }
 
     boolean isActive() {
         return isActive;
@@ -314,13 +257,6 @@ public class BottomBarTab extends LinearLayout {
         return badge != null;
     }
 
-    int getIndexInTabContainer() {
-        return indexInContainer;
-    }
-
-    void setIndexInContainer(int indexInContainer) {
-        this.indexInContainer = indexInContainer;
-    }
 
     void setIconTint(int tint) {
         iconView.setColorFilter(tint);
@@ -533,27 +469,6 @@ public class BottomBarTab extends LinearLayout {
         ViewCompat.setScaleY(titleView, scale);
     }
 
-    @Override
-    public Parcelable onSaveInstanceState() {
-        if (badge != null) {
-            Bundle bundle = badge.saveState(indexInContainer);
-            bundle.putParcelable("superstate", super.onSaveInstanceState());
-            return bundle;
-        }
-
-        return super.onSaveInstanceState();
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (badge != null && state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-            badge.restoreState(bundle, indexInContainer);
-
-            state = bundle.getParcelable("superstate");
-        }
-        super.onRestoreInstanceState(state);
-    }
 
     public static class Config {
         private final float inActiveTabAlpha;

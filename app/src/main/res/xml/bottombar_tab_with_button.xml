@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_recents"
+        icon="@drawable/ic_recents"
+        title="Recents" />
+    <tab
+        id="@+id/tab_favorites"
+        icon="@drawable/ic_favorites"
+        title="Favorites" />
+    <button
+        id="@+id/tab_nearby"
+        icon="@drawable/ic_plus"
+        cornerRadius="5"
+        iconColor="#ffffff"
+        backgroundColor="#29a416"
+        />
+    <tab
+        id="@+id/tab_friends"
+        icon="@drawable/ic_friends"
+        title="Friends" />
+    <tab
+        id="@+id/tab_food"
+        icon="@drawable/ic_restaurants"
+        title="Food" />
+</tabs>
