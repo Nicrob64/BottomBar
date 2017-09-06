@@ -407,20 +407,20 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
      * Get the currently selected tab.
      */
     public BottomBarTab getCurrentTab() {
-        return getTabAtPosition(getCurrentTabPosition());
+        return ((BottomBarTab) getTabAtPosition(getCurrentTabPosition()));
     }
 
     /**
      * Get the tab at the specified position.
      */
-    public BottomBarTab getTabAtPosition(int position) {
+    public BottomBarComponent getTabAtPosition(int position) {
         View child = tabContainer.getChildAt(position);
 
         if (child instanceof FrameLayout) {
             return findTabInLayout((FrameLayout) child);
         }
 
-        return (BottomBarTab) child;
+        return (BottomBarComponent) child;
     }
 
     /**
@@ -522,8 +522,10 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
             BottomBarTab.Config newConfig = getTabConfig();
 
             for (int i = 0; i < getTabCount(); i++) {
-                BottomBarTab tab = getTabAtPosition(i);
-                tab.setConfig(newConfig);
+                BottomBarComponent tab = getTabAtPosition(i);
+				if(tab instanceof BottomBarTab) {
+					((BottomBarTab) tab).setConfig(newConfig);
+				}
             }
         }
     }
@@ -716,7 +718,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
 
     private void selectTabAtPosition(int position, boolean animate) {
         BottomBarTab oldTab = getCurrentTab();
-        BottomBarTab newTab = getTabAtPosition(position);
+        BottomBarTab newTab = ((BottomBarTab) getTabAtPosition(position));
 
         oldTab.deselect(animate);
         newTab.select(animate);
