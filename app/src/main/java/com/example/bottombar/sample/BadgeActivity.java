@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarButton;
 import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -40,7 +41,7 @@ public class BadgeActivity extends AppCompatActivity {
             }
         });
 
-        BottomBarTab nearby = bottomBar.getTabWithId(R.id.tab_nearby);
+        BottomBarTab nearby = ((BottomBarTab) bottomBar.getTabWithId(R.id.tab_nearby));
         nearby.setBadgeCount(5);
     }
 }
