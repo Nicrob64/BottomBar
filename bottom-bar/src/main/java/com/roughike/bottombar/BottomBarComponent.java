@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 public abstract class BottomBarComponent extends LinearLayout {
 
+	@VisibleForTesting
+	static final String STATE_BADGE_COUNT = "STATE_BADGE_COUNT_FOR_TAB_";
 
 	protected int iconResId;
 
@@ -106,7 +108,7 @@ public abstract class BottomBarComponent extends LinearLayout {
 	@Override
 	public Parcelable onSaveInstanceState() {
 		if (badge != null) {
-			Bundle bundle = badge.saveState(indexInContainer);
+			Bundle bundle = saveState();
 			bundle.putParcelable("superstate", super.onSaveInstanceState());
 			return bundle;
 		}
@@ -114,15 +116,29 @@ public abstract class BottomBarComponent extends LinearLayout {
 		return super.onSaveInstanceState();
 	}
 
+	@VisibleForTesting
+	Bundle saveState() {
+		Bundle outState = new Bundle();
+		outState.putInt(STATE_BADGE_COUNT + getIndexInTabContainer(), badge.getCount());
+
+		return outState;
+	}
+
 	@Override
 	public void onRestoreInstanceState(Parcelable state) {
-		if (badge != null && state instanceof Bundle) {
+		if (state instanceof Bundle) {
 			Bundle bundle = (Bundle) state;
-			badge.restoreState(bundle, indexInContainer);
-
+			restoreState(bundle);
 			state = bundle.getParcelable("superstate");
 		}
+
 		super.onRestoreInstanceState(state);
+	}
+
+	@VisibleForTesting
+	void restoreState(Bundle savedInstanceState) {
+		int previousBadgeCount = savedInstanceState.getInt(STATE_BADGE_COUNT + getIndexInTabContainer());
+		setBadgeCount(previousBadgeCount);
 	}
 
 
