@@ -3,8 +3,8 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/bb_bottom_bar_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
         android:alpha="0.6"/>
 
     <!-- We use this empty space to push the text to the bottom -->

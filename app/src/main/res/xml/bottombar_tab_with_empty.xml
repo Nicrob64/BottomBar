@@ -7,6 +7,7 @@
     <tab
         id="@+id/tab_favorites"
         icon="@drawable/ic_favorites"
+        activeIcon="@drawable/tab_activity_on"
         title="Favorites" />
     <empty
         id="@+id/tab_empty"
