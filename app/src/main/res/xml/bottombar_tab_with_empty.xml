@@ -18,5 +18,6 @@
     <tab
         id="@+id/tab_food"
         icon="@drawable/ic_restaurants"
+        activeIcon="@drawable/ic_recents"
         title="Food" />
 </tabs>

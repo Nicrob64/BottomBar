@@ -19,6 +19,7 @@ public abstract class BottomBarComponent extends LinearLayout {
 	static final String STATE_BADGE_COUNT = "STATE_BADGE_COUNT_FOR_TAB_";
 
 	protected int iconResId;
+	protected int activeIconResId;
 
 	protected String title;
 	protected TextView titleView;
@@ -154,6 +155,9 @@ public abstract class BottomBarComponent extends LinearLayout {
 		this.iconResId = iconResId;
 	}
 
+	void setActiveIconResId(int iconResId){
+		this.activeIconResId = iconResId;
+	}
 
 	String getTitle() {
 		return title;

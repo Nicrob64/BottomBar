@@ -53,6 +53,7 @@ public class BottomBarTab extends BottomBarComponent {
     private int barColorWhenSelected;
 
 
+
     private boolean isActive;
 
 	private boolean navigationItem = true;
@@ -283,7 +284,9 @@ public class BottomBarTab extends BottomBarComponent {
 
     void select(boolean animate) {
         isActive = true;
-
+        if(activeIconResId != 0){
+        	iconView.setImageResource(activeIconResId);
+		}
         if (animate) {
             setTopPaddingAnimated(iconView.getPaddingTop(), sixDps);
             animateIcon(activeAlpha);
@@ -303,6 +306,10 @@ public class BottomBarTab extends BottomBarComponent {
 
     void deselect(boolean animate) {
         isActive = false;
+
+		if(activeIconResId != 0){
+			iconView.setImageResource(iconResId);
+		}
 
         boolean isShifting = type == Type.SHIFTING;
 
