@@ -44,10 +44,7 @@ public class ButtonTabActivity extends AppCompatActivity {
 			@Override
 			public void onButtonClicked(@IdRes int tabId) {
 				Toast.makeText(getApplicationContext(), TabMessage.get(tabId, false) + "non-navigation selected", Toast.LENGTH_LONG).show();
-				if(Build.VERSION.SDK_INT >= 21) {
-					float scale = getResources().getDisplayMetrics().density;
-					bottomBar.setCameraDistance(1900*scale);
-				}
+				bottomBar.setItems(R.xml.bottombar_tabs_three);
 			}
 		});
 
