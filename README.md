@@ -50,7 +50,7 @@
     This will change the icon on the tab bar to `ic_friends_active` when it is the currently selected item
 * Fixed problems with the onRestoreInstanceState that were in the original
 
-##Mostly original notes from the old version are below, with some information updated
+## Mostly original notes from the old version are below, with some information updated
 
 If you need more info about a feature that has been changed or added and it is not here, looking at the sample app is the easiest way. Add an issue here if you would like any changes made or need me to update the readme.
 
@@ -58,13 +58,11 @@ If you need more info about a feature that has been changed or added and it is n
 
 A custom view component that mimics the new [Material Design Bottom Navigation pattern](https://www.google.com/design/spec/components/bottom-navigation.html).
 
-## Does it work on my Grandpa Gary's HTC Dream?
+## API Level
 
-Nope. The current minSDK version is **API level 11 (Honeycomb).**
+The current minSDK version is **API level 11 (Honeycomb).**
 
-Your uncle Bob's Galaxy S Mini will probably be supported in the future though. 
-
-## Gimme that Gradle sweetness, pls?
+## Gradle steps to add this to your project
 
 Step 1. Add this to your root build.gradle at the end of repositories:
 ```groovy
@@ -86,13 +84,13 @@ dependencies {
 ```
 	
 
-## How?
+## How do I implement this whole thing?
 
 You can add items by **writing a XML resource file**.
 
 ### Creating the icons
 
-The icons must be fully opaque, solid black color, 24dp and **with no padding**. For example, [with Android Asset Studio Generic Icon generator](https://romannurik.github.io/AndroidAssetStudio/icons-generic.html), select "TRIM" and make sure the padding is 0dp. Here's what your icons should look like:
+The icons must be fully opaque, solid black color, 32dp and **with no padding**. (Will be scaled to 32dp regardless of size, so dont make the phone work harder than it needs to) For example, [with Android Asset Studio Generic Icon generator](https://romannurik.github.io/AndroidAssetStudio/icons-generic.html), select "TRIM" and make sure the padding is 0dp. Here's what your icons should look like:
 
 ![Sample icons](https://raw.githubusercontent.com/roughike/BottomBar/master/graphics/icons-howto.png)
 
@@ -325,11 +323,14 @@ Easy-peasy!
 You can easily add badges for showing an unread message count or new items / whatever you like.
 
 ```java
-BottomBarTab nearby = bottomBar.getTabWithId(R.id.tab_nearby);
+BottomBarComponent nearby = bottomBar.getTabWithId(R.id.tab_nearby);
 nearby.setBadgeCount(5);
 
 // Remove the badge when you're done with it.
-nearby.removeBadge/();
+nearby.removeBadge();
+
+//alternatively putting (x < 1) will clear the badge
+nearby.setBadgeCount(0);
 ```
 
 ## All customization options
@@ -386,6 +387,7 @@ nearby.removeBadge/();
     id="@+id/tab_recents"
     title="Recents"
     icon="@drawable/empty_icon"
+    activeIcon="@drawable/empty_icon_on"
     inActiveColor="#00FF00"
     activeColor="#FF0000"
     barColorWhenSelected="#FF0000"
@@ -401,27 +403,12 @@ nearby.removeBadge/();
     <dd>the color that the whole BottomBar should be when selected this tab.</dd>
     <dt>badgeBackgroundColor</dt>
     <dd>the background color for any Badges in this tab.</dd>
-    <dt></dt>
-    <dd></dd>
+    <dt>activeIcon</dt>
+    <dd>The icon that is shown when the tab is selected</dd>
     <dt></dt>
     <dd></dd>
 </dl>
 
-## Apps using BottomBar
-
-  * [FragNav](https://github.com/ncapdevi/FragNav) : An Android Library for managing multiple stacks of Fragments. BottomBar is used in the sample app.
-  * [BottomNavigationBar](https://github.com/pocheshire/BottomNavigationBar) : BottomBar ported to C# for Xamarin developers
-  * [KyudoScoreBookTeam](https://play.google.com/store/apps/details?id=com.bowyer.app.android.kyudoscoreteam&hl=en) : BottomBar is used in the KyudoScoreBookTeam app.
-  * [memeham](https://play.google.com/store/apps/details?id=com.memeham.beyourself.memeham) : BottomBar is used in the memeham app.
-  * [NewsCatchr](https://play.google.com/store/apps/details?id=jlelse.readit) : A newsreader app, which uses this BottomBar library.
-  
-Send me a pull request with modified README.md to get a shoutout!
-
-## Contributions
-
-Feel free to create issues and pull requests.
-
-When creating pull requests, **more is more:** I'd like to see ten small pull requests separated by feature rather than all those combined into a huge one.
 
 ## License
 
