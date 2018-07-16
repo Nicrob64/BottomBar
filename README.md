@@ -1,22 +1,58 @@
 # BottomBar
 
-[![Build Status](https://travis-ci.org/roughike/BottomBar.svg?branch=master)](https://travis-ci.org/roughike/BottomBar) [![Coverage Status](https://coveralls.io/repos/github/roughike/BottomBar/badge.svg?branch=development)](https://coveralls.io/github/roughike/BottomBar?branch=master)
+[![](https://jitpack.io/v/Nicrob64/BottomBar.svg)](https://jitpack.io/#Nicrob64/BottomBar)
 
 <img src="https://raw.githubusercontent.com/roughike/BottomBar/master/graphics/shy-demo.gif" width="30%" /> <img src="https://raw.githubusercontent.com/roughike/BottomBar/master/graphics/shifting-demo.gif" width="30%" /> <img src="https://raw.githubusercontent.com/roughike/BottomBar/master/graphics/screenshot_tablet.png" width="33%" />
 
-## Version 2.0 released!
+## Changes from the original version of BottomBar
 
-[The latest version before that can be found in the v1 branch](https://github.com/roughike/BottomBar/tree/v1)
+* Support for empty tabs in place of a tab (no listener) but equal tab space. This can be useful if you want to add a floating action button overlapping the tab bar but not as part of the tab bar itself, which was what was used in our app for a while before we axed the floating action button in favour of context based button actions.
+    ```xml
+        <empty id="@+id/tab_empty"/>
+    ```
 
-* Cleaner code and better APIs
-* No more unnecessary stuff or spaghetti mess
-* Now the look, feel and behavior is defined in XML, as it should be
-* No more nasty regressions, thanks to the automated tests
-* **Everything is a little different compared to earlier, but it's for the greater good!**
+* Support for buttons instead of tabs
+    ```xml
+        <button
+        id="@+id/tab_nearby"
+        icon="@drawable/ic_plus"
+        cornerRadius="5"
+        iconColor="#ffffff"
+        backgroundColor="#29a416"
+        />
+    ```
+    ```java
+        bottomBar.setOnButtonClickListener(new OnButtonClickListener() {
+			@Override
+			public void onButtonClicked(@IdRes int tabId) {
+				Toast.makeText(getApplicationContext(), TabMessage.get(tabId, false) + "non-navigation selected", Toast.LENGTH_LONG).show();
+				bottomBar.setItems(R.xml.bottombar_tabs_three);
+			}
+		});
+    ```
 
-[How to contribute](https://github.com/roughike/BottomBar/blob/master/README.md#contributions)
+* Fixes for badges on smaller devices with 5 tabs (performance may vary with more than 5)
+* Support for editing tabs on the fly (ButtonBar#setItems clears items prior to updating, see example "Using Button" and click the button)
+    ```java
+        bottomBar.setItems(R.xml.bottombar_tabs_three);
+    ```
 
-[Changelog](https://github.com/roughike/BottomBar/blob/master/CHANGELOG.md)
+* Make icon size static to 32dp
+* Support for Active/Inactive icons for selected tabs 
+    You can take advantage of this by putting `activeIcon` in your xml file like so : 
+    ```xml
+        <tab
+            id="@+id/tab_friends"
+            icon="@drawable/ic_friends"
+            activeIcon="@drawable/ic_friends_active"
+            title="Friends" />
+    ```
+    This will change the icon on the tab bar to `ic_friends_active` when it is the currently selected item
+* Fixed problems with the onRestoreInstanceState that were in the original
+
+##Mostly original notes from the old version are below, with some information updated
+
+If you need more info about a feature that has been changed or added and it is not here, looking at the sample app is the easiest way. Add an issue here if you would like any changes made or need me to update the readme.
 
 ## What?
 
@@ -30,19 +66,25 @@ Your uncle Bob's Galaxy S Mini will probably be supported in the future though.
 
 ## Gimme that Gradle sweetness, pls?
 
+Step 1. Add this to your root build.gradle at the end of repositories:
 ```groovy
-compile 'com.roughike:bottom-bar:2.0.2'
+allprojects {
+    repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
 ```
-
-**Maven:**
-```xml
-<dependency>
-  <groupId>com.roughike</groupId>
-  <artifactId>bottom-bar</artifactId>
-  <version>2.0.2</version>
-  <type>pom</type>
-</dependency>
+Step 2. Add the dependency
+```groovy
+dependencies {
+	...
+    implementation 'com.github.Nicrob64:BottomBar:-SNAPSHOT'
+    ...
+}
+}
 ```
+	
 
 ## How?
 
@@ -73,6 +115,7 @@ Define your tabs in an XML resource file.
     <tab
         id="@+id/tab_friends"
         icon="@drawable/ic_friends"
+        activeIcon="@drawable/ic_friendsActive"
         title="Friends" />
 </tabs>
 ```
