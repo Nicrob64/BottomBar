@@ -24,6 +24,7 @@
         <activity android:name=".CustomColorAndFontActivity" />
         <activity android:name=".ButtonTabActivity" />
         <activity android:name=".EmptyTabActivity" />
+        <activity android:name=".FiveTabsWithBadgesActivity"/>
 
     </application>
 

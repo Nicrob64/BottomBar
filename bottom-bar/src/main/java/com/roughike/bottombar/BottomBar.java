@@ -257,6 +257,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
         int index = 0;
         int biggestWidth = 0;
         tabContainer.removeAllViews();
+        tabContainer.setClipChildren(false);
 
         BottomBarComponent[] viewsToAdd = new BottomBarComponent[bottomBarItems.size()];
 
