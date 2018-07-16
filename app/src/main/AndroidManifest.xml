@@ -25,6 +25,7 @@
         <activity android:name=".ButtonTabActivity" />
         <activity android:name=".EmptyTabActivity" />
         <activity android:name=".FiveTabsWithBadgesActivity"/>
+        <activity android:name=".ChangeTabsActivity"/>
 
     </application>
 

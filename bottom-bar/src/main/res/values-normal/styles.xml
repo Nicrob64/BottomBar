@@ -2,6 +2,6 @@
 <resources>
     <style name="BB_BottomBarBadge_Text" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textSize">8sp</item>
+        <item name="android:textSize">10sp</item>
     </style>
 </resources>

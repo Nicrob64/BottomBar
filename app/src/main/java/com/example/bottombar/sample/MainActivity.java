@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		findViewById(R.id.buttons).setOnClickListener(this);
 		findViewById(R.id.empty).setOnClickListener(this);
 		findViewById(R.id.five_tabs_with_badges).setOnClickListener(this);
+		findViewById(R.id.switch_tabs).setOnClickListener(this);
     }
 
     @Override
@@ -50,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				break;
 			case R.id.five_tabs_with_badges:
 				clazz = FiveTabsWithBadgesActivity.class;
+				break;
+			case R.id.switch_tabs:
+				clazz = ChangeTabsActivity.class;
 				break;
         }
 
