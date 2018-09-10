@@ -685,7 +685,9 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
 		BottomBarComponent newTab = (BottomBarComponent) v;
 
 		if(newTab instanceof BottomBarTab) {
-			oldTab.deselect(true);
+			if(oldTab != null) {
+				oldTab.deselect(true);
+			}
 			((BottomBarTab) newTab).select(true);
 			shiftingMagic(oldTab, ((BottomBarTab) newTab), true);
 			handleBackgroundColorChange(((BottomBarTab) newTab), true);
@@ -750,7 +752,9 @@ public class BottomBar extends LinearLayout implements View.OnClickListener, Vie
 
     private void shiftingMagic(BottomBarTab oldTab, BottomBarTab newTab, boolean animate) {
         if (isShiftingMode()) {
-            oldTab.updateWidth(inActiveShiftingItemWidth, animate);
+        	if(oldTab != null) {
+				oldTab.updateWidth(inActiveShiftingItemWidth, animate);
+			}
             newTab.updateWidth(activeShiftingItemWidth, animate);
         }
     }
